@@ -5,6 +5,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var MaterialElement = (function () {
     function MaterialElement(tagName) {
+        if (tagName === void 0) { tagName = "temp"; }
         this.element = document.createElement(tagName);
     }
     MaterialElement.prototype.addClass = function (newClass) {
@@ -26,6 +27,19 @@ var MaterialElement = (function () {
     MaterialElement.prototype.getElement = function () {
         return this.element;
     };
+    MaterialElement.prototype.getType = function () {
+        return this.element.tagName.toLowerCase();
+    };
+    MaterialElement.prototype.getChildren = function () {
+        var children = this.element.childNodes;
+        var materialChildren = [];
+        children.forEach(function (child) {
+            var materialChild = new MaterialElement();
+            materialChild.setElement(child);
+            materialChildren.push(materialChild);
+        }, this);
+        return materialChildren;
+    };
     MaterialElement.prototype.empty = function () {
         this.getElement().innerHTML = "";
     };
@@ -38,6 +52,9 @@ var MaterialElement = (function () {
     MaterialElement.prototype.addToBody = function () {
         this.prependToElement(document.getElementsByTagName("body")[0]);
     };
+    MaterialElement.prototype.delete = function () {
+        this.element.parentElement.removeChild(this.element);
+    };
     return MaterialElement;
 }());
 var MaterialTextField = (function (_super) {
@@ -45,7 +62,7 @@ var MaterialTextField = (function (_super) {
     function MaterialTextField(tagName, text) {
         _super.call(this, tagName);
         this.text = text;
-        this.getElement().innerHTML = this.text;
+        this.element.innerHTML = this.text;
     }
     MaterialTextField.prototype.updateText = function (newText) {
         this.text = newText;

@@ -1,7 +1,7 @@
 class MaterialElement {
 	protected element;
 
-	constructor(tagName: string) {
+	constructor(tagName: string = "temp") {
 		this.element = document.createElement(tagName);
 	}
 	addClass(newClass: string) {
@@ -22,6 +22,19 @@ class MaterialElement {
 	getElement() {
 		return this.element;
 	}
+	getType(): string {
+		return this.element.tagName.toLowerCase();
+	}
+	getChildren(): MaterialElement[] {
+		var children = this.element.childNodes;
+		var materialChildren = [];
+		children.forEach(function(child) {
+			var materialChild = new MaterialElement();
+			materialChild.setElement(child);
+			materialChildren.push(materialChild);
+		}, this);
+		return materialChildren;
+	}
 	empty() {
 		this.getElement().innerHTML = "";
 	}
@@ -34,6 +47,9 @@ class MaterialElement {
 	addToBody() {
 		this.prependToElement(document.getElementsByTagName("body")[0]);
 	}
+	delete() {
+		this.element.parentElement.removeChild(this.element);
+	}
 }
 
 class MaterialTextField extends MaterialElement {
@@ -42,7 +58,7 @@ class MaterialTextField extends MaterialElement {
 	constructor(tagName: string, text: string) {
 		super(tagName);
 		this.text = text;
-		this.getElement().innerHTML = this.text;
+		this.element.innerHTML = this.text;
 	}
 	
 	updateText(newText: string) {
